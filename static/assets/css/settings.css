@@ -1,88 +1,28 @@
-
-
-
-
-.settings {
-    width: 80%;
-    margin: 0 auto;
-}
-
-.settings__container{
-    display: flex;
-    flex-direction: column;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-    padding: 5%;
-}
-
-
-.profile-image__container {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.settings__image {
-    width: 6rem;
-    height: 6rem;
-    border-radius: 50%;
-    margin-bottom: 1rem;
-}
-
-.label-input {
-    font-size: 14px;
-    font-weight: 500;
-}
-
-
-#file-input {
-    display: none;
-}
-
-#file-input + label {
-    background-color: black;
-    color: white;
-    padding: 8px;
-    border-radius: 4px;
-    cursor: pointer;
-    max-width: 10rem;
-}
-
-#file-input + label:hover {
-    background-color: #222222;
-    transition: .7s;
-}
-
-.settings__label {
-    font-weight: bold;
-    color: #222222;
-}
-
-.settings__input {
-    margin-bottom: 1rem;
-}
-
-.settings__input.nickname {
-    max-width: 10rem;
-}
-
-.settings__input.bio {
-    height: 5rem;
-}
-
-.settings__button {
-    height: 2.25rem;
-    border-radius: 1.25rem;
-    border: none;
-    background: #000000;
-    color: #FFFFFF;
-    cursor: pointer;
-    max-width: 10rem;
-}
-
-.settings__button:hover{
-    background-color: #222222;
-    transition: .7s;
+.img-size {
+    width: 4rem;
+    height: 4rem;
 }
 
 
 
+@media screen and (min-width:768px) {
+    .img-size {
+        width: 6rem;
+        height: 6rem;
+    }
+
+    .form-size {
+        height: 3rem;
+    }
+
+}
+
+@media screen and (min-width:1024px) {
+    .img-size {
+        width: 8rem;
+        height: 8rem;
+    }
+
+    
+    
+}

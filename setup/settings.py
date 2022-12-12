@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -135,16 +136,16 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # EMAIL
 
+EMAIL_BACKEND = config('EMAIL_BACKEND')
 EMAIL_HOST = config('EMAIL_HOST')
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 EMAIL_PORT = config('EMAIL_PORT')
-
 # MESSAGE
 
 MESSAGE_TAGS = {
-    messages.ERROR : 'messages-error',
-    messages.SUCCESS: 'messages-success',
+    messages.ERROR : 'alert alert-danger alert-dismissible fade show',
+    messages.SUCCESS: 'alert alert-success alert-dismissible fade show',
 }

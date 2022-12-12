@@ -1,14 +1,86 @@
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+    crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/assets/css/index.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
     <title>Document</title>
 </head>
 <body>
-    <p>Hi, {{request.user.username}}</p>
-    <a href="{% url 'logout' %}">Logout</a>
-    <a href="{% url 'profile-settings' %}">Profile</a>
+    <header class="container-fluid border-bottom">
+        <div class="home-page my-2">
+            <div class="nav-flex">
+                <img class="logo-homepage" src="/media/blank-profile-picture.png" class="rounded-circle" width="32px" height="32px" alt="">
+                <a class="text-decoration-none fw-bold text-dark" href="">Home Page</a>
+            </div>
+        </div>
+    </header>
+    <main class="container-index">
+        <div class="pos-fixed">
+            <div class="menu">
+                <img class="logo-menu" src="/static/assets/img/dwarf-helmet.svg"  alt="">
+                <div class="menu-desktop menu-buttons">
+                    <i class="bi bi-house-door-fill"><span>  Home Page</span></i>
+                    <i class="bi bi-hash"><span>  Explore</span></i>
+                    <i class="bi bi-bell"><span>  Notifications</span></i>
+                    <i class="bi bi-envelope">  Messages</i>
+                    <i class="bi bi-person">  Profile</i>
+                </div>
+            </div>
+        </div>
+        <div class="post-container">
+            <div class="post-area">
+                <a class="post-home" href="">Home Page</a>
+                <form method="POST" class="post-write"> {% csrf_token %}
+                    <div class="post-write-flex">
+                        <img class="rounded-circle" src="{{user_profile.profile_img.url}}" width="48px" height="48px" alt="">
+                        <textarea name="text_content" class="post-write-input" maxlength="280" placeholder= "Say something nice!"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-dark rounded-pill btn-sm px-4 post-button">Post</button>
+                </form>
+            </div>
+            {% for post in feed reversed %}
+            <div class="post"> 
+                <div class="img-space">
+                    <img class="profile-img-post rounded-circle" src="{{post.profile.profile_img.url}}" alt="">
+                </div>
+                <div class="post-content ms-1">
+                    <div class="post-header">
+                        <a href="{% url 'profile' post.profile.user.username %}" class="name">{{post.profile.nickname}}</a>
+                        <a href="" class="username">@{{post.profile.user.username}}</a>
+                        <p class="post-time">{{post.posted_at|naturaltime}}</p>
+                    </div>
+                    <div class="post-text">
+                        {{post.text_content}}
+                    </div>
+                    <div class="post-interact">
+                        <i class="bi bi-chat"></i>
+                        <i style="font-size:1.3rem;" class="bi bi-reply"></i>
+                        <i class="bi bi-heart"></i>
+                        <i class="bi bi-share"></i>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+    <footer class="container-fluid footer-mobile px-3 border-top ">
+        <div class="header-icons my-2">
+            <i class="bi bi-house-fill"></i>
+            <i class="bi bi-search"></i>
+            <i class="bi bi-bell"></i>
+            <i class="bi bi-envelope"></i>
+        </div>
+    </footer>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+ integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+  crossorigin="anonymous"></script>
+<script src="/static/assets/js/textarea-resize.js"></script>
 </html>

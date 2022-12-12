@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+    crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/static/assets/css/index.css">
+    <link rel="stylesheet" href="/static/assets/css/profile.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <section class="profile-info">
+            <div class="profile-images">
+                <div class="profile-banner" src="/media/wpp.jpg" alt=""></div>
+                <img class="profile-img rounded-circle" src="{{profile.profile_img.url}}" alt="">
+            </div>
+            
+            <div class="profile-textinfo">
+                <div style="display: flex;justify-content: space-between; align-items: center;">
+                    <span class="nickname">{{profile.nickname}}</span>
+                    {% if request.user.username != profile.user.username %}
+                        <form method="POST" action="/follow"> {% csrf_token %}
+                            <input type="hidden" name="who_is_being_followed" value="{{profile.user.username}}" id="">
+                            <button class="follow-btn">{{button_text}}</button>
+                        </form>
+                    {% endif %}
+                </div>
+                <span class="username">@{{profile.user.username}}</span>
+                <span class="bio">{{profile.bio}}</span>
+            </div>
+            <div class="profile-follow">
+                <span><strong>{{following}}</strong> follows</span>
+                <span><strong>{{number_of_followers}}</strong> followers</span>
+            </div>
+        </section>
+    </header>
+    <main>
+        <div class="profile-nav">
+            <a class="profile-nav-selected" href="">Posts</a>
+            <a href="">Posts & replies</a>
+            <a href="">Media</a>
+            <a href="">Likes</a>
+        </div>
+    </main>
+    <footer class="container-fluid footer-mobile px-3 border-top ">
+        <div class="header-icons my-2">
+            <i class="bi bi-house-fill"></i>
+            <i class="bi bi-search"></i>
+            <i class="bi bi-bell"></i>
+            <i class="bi bi-envelope"></i>
+        </div>
+    </footer>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+ integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+  crossorigin="anonymous"></script>
+</html>
