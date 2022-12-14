@@ -64,6 +64,8 @@ def follow (request):
     else:
         return redirect (f'profile/{who_is_being_followed}')
             
+def like (request):
+    pass
 
 def sign_up(request):
     if request.method == 'POST':

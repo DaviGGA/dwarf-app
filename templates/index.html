@@ -26,11 +26,22 @@
             <div class="menu">
                 <img class="logo-menu" src="/static/assets/img/dwarf-helmet.svg"  alt="">
                 <div class="menu-desktop menu-buttons">
-                    <i class="bi bi-house-door-fill"><span>  Home Page</span></i>
-                    <i class="bi bi-hash"><span>  Explore</span></i>
-                    <i class="bi bi-bell"><span>  Notifications</span></i>
-                    <i class="bi bi-envelope">  Messages</i>
-                    <i class="bi bi-person">  Profile</i>
+                    <a class="menu-button" href="">
+                        <img class="menu-button-image" src="/media/icons/home.png" alt="">
+                        <span class="menu-button-text">Home Page</span>
+                    </a>
+                    <a class="menu-button" href="">
+                        <img class="menu-button-image" src="/media/icons/notification.png" alt="">
+                        <span class="menu-button-text">Notifications</span>
+                    </a>
+                    <a class="menu-button" href="">
+                        <img class="menu-button-image" src="/media/icons/message.png" alt="">
+                        <span class="menu-button-text">Messsages</span>
+                    </a>
+                    <a class="menu-button"href="">
+                        <img class="menu-button-image" src="/media/icons/profile.png" alt="">
+                        <span class="menu-button-text">Profile</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -60,14 +71,45 @@
                         {{post.text_content}}
                     </div>
                     <div class="post-interact">
-                        <i class="bi bi-chat"></i>
-                        <i style="font-size:1.3rem;" class="bi bi-reply"></i>
-                        <i class="bi bi-heart"></i>
-                        <i class="bi bi-share"></i>
+                        <button class="post-i-buttons"><img src="/media/icons/comment.png" width="15px" height="16px" alt=""></button>
+                        <button class="post-i-buttons"><img src="/media/icons/retweet.png" width="15px" height="16px" alt=""></button>
+                        <form action="/like" method="POST">
+                            <button class="post-i-buttons"><img src="/media/icons/like.svg" width="18px" height="18px" alt=""></button>
+                        </form>
+                        <button class="post-i-buttons"><img src="/media/icons/share.png" width="16px" height="16px" alt=""></button>
                     </div>
                 </div>
             </div>
             {% endfor %}
+        </div>
+        <div class="search-and-follow">
+            <form class="search" action="">
+                <input class="search-input" type="text" placeholder="Search on Dwarfapp">
+                <img class="search-image" src="/media/icons/mglass-grey.svg" alt="">
+            </form>
+            <div class="follow">
+                <h2 class="follow-title">Follow Sugestions</h2>
+                <div class="follow-user">
+                    <img  class="follow-profile-image rounded-circle" src="/media/blank-profile-picture.png" alt="">
+                    <div class="follow-space-beetween">
+                        <div class="follow-name">
+                            <a class="follow-nickname" href="">Neymar Jr.</a>
+                            <span class="follow-username">@neymaroficial</span>
+                        </div>
+                        <button class="follow-btn rounded-pill">Follow</button>
+                    </div>
+                </div>
+                <div class="follow-user">
+                    <img  class="follow-profile-image rounded-circle" src="/media/blank-profile-picture.png" alt="">
+                    <div class="follow-space-beetween">
+                        <div class="follow-name">
+                            <a class="follow-nickname" href="">Vini Jr.</a>
+                            <span class="follow-username">@vinijrrofc</span>
+                        </div>
+                        <button class="follow-btn rounded-pill">Follow</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
     <footer class="container-fluid footer-mobile px-3 border-top ">

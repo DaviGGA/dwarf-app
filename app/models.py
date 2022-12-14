@@ -33,3 +33,7 @@ class Post (models.Model):
 class Follow (models.Model):
     who_is_following = models.CharField(max_length=100, blank=False, null=False)
     who_is_being_followed = models.CharField(max_length=100, blank=False, null=False)
+
+class Like (models.Model):
+    who_is_liking = models.CharField(max_length=100, blank=False, null = False)
+    who_is_being_liked = models.CharField(max_length=100, blank=False, null = False)

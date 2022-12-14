@@ -20,7 +20,10 @@ textarea::-webkit-scrollbar {
 }
 
 .pos-fixed {
-    width: 25%;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
 }
 
 .container-index {
@@ -56,7 +59,7 @@ textarea::-webkit-scrollbar {
 .post-container {
     display: flex;
     flex-direction: column;
-    width: 50%;
+    width: 40%;
 }
 
 .post-content {
@@ -100,10 +103,20 @@ textarea::-webkit-scrollbar {
 }
 
 .post-interact {
+    margin: .5rem 0 ;
     display: flex;
     align-items: center;
     gap: 2.5rem;
 }
+
+.post-i-buttons {
+    border:none;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    padding: 0;
+}
+
 
 .header-icons {
     display: flex;
@@ -135,8 +148,8 @@ textarea::-webkit-scrollbar {
     }
 
     .container-index {
-        margin-top: 0.5rem;
-        width: 70%;
+        margin-top: 0;
+        width: 100%;
         justify-content: flex-start;
     }
 
@@ -144,18 +157,56 @@ textarea::-webkit-scrollbar {
         display: none;
     }
 
+    .logo-menu {
+        margin-left: .5rem;
+    }
+
     .menu {
         display: block;
         font-style: normal;
         position: fixed;
-        left: 25;
+        left: 5;
+        padding: 0 1rem;
+        margin-top: .5rem;
     }
 
     .menu-buttons {
         display: flex;
         font-size: 1.2rem;
         flex-direction: column;
-        gap: 1rem;
+        gap: .5rem;
+    }
+
+    .menu-button {
+        display: flex;
+        padding: .5rem 1rem;
+        text-decoration: none;
+        align-items: center;
+        gap: .5rem;
+    }
+
+    .menu-button:hover {
+        border-radius: 32px;
+        
+        background-color: #f0f0f0;
+        transition: .5s;
+    }
+
+    .menu-button-image {
+        width: 20px;
+        height: 20px;
+    }
+
+    .menu-button-text {
+        font-family: sans-serif;
+        
+        font-size: 1rem;
+
+        color: #000;
+    }
+
+    .post-container {
+        justify-content: center;
     }
 
     .post-area {
@@ -169,6 +220,7 @@ textarea::-webkit-scrollbar {
     }
 
     .post-home {
+        margin-top: .5rem;
         text-decoration: none;
         color: #000;
         font-weight: bold;
@@ -206,6 +258,92 @@ textarea::-webkit-scrollbar {
         border-left: rgb(222, 226, 230) 1px solid;
         border-right: rgb(222, 226, 230) 1px solid;
         border-bottom: rgb(222, 226, 230) 1px solid ;
+    }
+
+    .search {
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+    }
+
+    .search-input {
+        /* background: url(/media/icons/search.png) 8px center no-repeat; */   
+        border: none;
+        border-radius: 20px;
+        background: #eeeeee;
+        margin-top: .5rem;
+        margin-left: .5rem;
+        width: 15rem;
+        height: 2rem;
+        padding-left: 1rem;
+        border-style: none;
+        outline: none;
+        font-size: 12px;
+             
+    }
+
+    .search-image {
+        position: absolute;
+        padding-top: .5rem;
+        padding-right: .75rem;
+    }
+
+    .search-input::placeholder {
+        font-size: 12px;
+        padding-bottom: .1rem;
+
+    }
+
+    .follow-user {
+        display: flex;
+        gap: .5rem;
+        width: 12rem;
+        align-items: center;
+        margin-left: .5rem;
+        margin-bottom: .5rem;
+    }
+
+    .follow-title {
+        margin-top: 1rem;
+        margin-left: .5rem;
+        font-size: 18px;
+    }
+
+    .follow-profile-image {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .follow-name {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .follow-nickname {
+        font-size: 12px;
+        text-decoration: none;
+        color: #000;
+        font-weight: bold;
+
+    }
+
+    .follow-username {
+        font-size: 12px;
+        color: #536471;
+    }
+
+    .follow-btn {
+        background-color: #000;
+        color: #fff;
+        height: 1.5rem;
+        font-size: 10px;
+        align-self: center;
+    }
+
+    .follow-space-beetween {
+        display: flex;
+        width: 8.5rem;
+        justify-content: space-between;
     }
 
     .footer-mobile {
