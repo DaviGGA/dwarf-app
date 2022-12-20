@@ -38,7 +38,7 @@
                         <img class="menu-button-image" src="/media/icons/message.png" alt="">
                         <span class="menu-button-text">Messsages</span>
                     </a>
-                    <a class="menu-button"href="">
+                    <a class="menu-button"href="{% url 'profile' request.user.username %}">
                         <img class="menu-button-image" src="/media/icons/profile.png" alt="">
                         <span class="menu-button-text">Profile</span>
                     </a>
@@ -53,19 +53,31 @@
                         <img class="rounded-circle" src="{{user_profile.profile_img.url}}" width="48px" height="48px" alt="">
                         <textarea name="text_content" class="post-write-input" maxlength="280" placeholder= "Say something nice!"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-dark rounded-pill btn-sm px-4 post-button">Post</button>
+                    <button type="submit" class="btn btn-dark rounded-pill btn-sm px-4 post-button disabled">Post</button>
                 </form>
             </div>
-            {% for post in feed reversed %}
+            {% for post in user_feed reversed %}
             <div class="post"> 
                 <div class="img-space">
                     <img class="profile-img-post rounded-circle" src="{{post.profile.profile_img.url}}" alt="">
                 </div>
                 <div class="post-content ms-1">
                     <div class="post-header">
-                        <a href="{% url 'profile' post.profile.user.username %}" class="name">{{post.profile.nickname}}</a>
-                        <a href="" class="username">@{{post.profile.user.username}}</a>
-                        <p class="post-time">{{post.posted_at|naturaltime}}</p>
+                        <div>
+                            <a href="{% url 'profile' post.profile.user.username %}" class="name">{{post.profile.nickname}}</a>
+                            <a href="" class="username">@{{post.profile.user.username}}</a>
+                            <span class="post-time">{{post.posted_at|naturaltime}}</span>
+                        </div>
+                        <div class="dropdown">
+                            <button type="button" class="post-dropdown-button drop-btn">
+                                <img src="/media/icons/dot.svg" class="post-dropdown" width="16px" height="16px" alt="">
+                            </button>
+                            <div id="myDropdown" class="dropdown-content">
+                                <a href="">Test</a>
+                                <a href="">Test</a>
+                                <a href="">Test</a>
+                            </div>
+                        </div>
                     </div>
                     <div class="post-text">
                         {{post.text_content}}
@@ -73,8 +85,10 @@
                     <div class="post-interact">
                         <button class="post-i-buttons"><img src="/media/icons/comment.png" width="15px" height="16px" alt=""></button>
                         <button class="post-i-buttons"><img src="/media/icons/retweet.png" width="15px" height="16px" alt=""></button>
-                        <form action="/like" method="POST">
+                        <form action="/like" method="POST"> {% csrf_token %}
+                            <input type="hidden" name="post_being_liked" value="{{post.pk}}">
                             <button class="post-i-buttons"><img src="/media/icons/like.svg" width="18px" height="18px" alt=""></button>
+                            <span class="post-numbers">{{post.likes}}</span>
                         </form>
                         <button class="post-i-buttons"><img src="/media/icons/share.png" width="16px" height="16px" alt=""></button>
                     </div>
@@ -82,7 +96,7 @@
             </div>
             {% endfor %}
         </div>
-        <div class="search-and-follow">
+        <div class="search-and-follow pos-fixed-right">
             <form class="search" action="">
                 <input class="search-input" type="text" placeholder="Search on Dwarfapp">
                 <img class="search-image" src="/media/icons/mglass-grey.svg" alt="">
@@ -125,4 +139,6 @@
  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
   crossorigin="anonymous"></script>
 <script src="/static/assets/js/textarea-resize.js"></script>
+<script src="/static/assets/js/button-disable.js"></script>
+<script src="/static/assets/js/post-dropdown-button.js"></script>
 </html>

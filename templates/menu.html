@@ -1,0 +1,23 @@
+<div class="menu-flex">
+    <div class="menu">
+        <img class="logo-menu" src="/static/assets/img/dwarf-helmet.svg"  alt="">
+        <div class="menu-desktop menu-buttons">
+            <a class="menu-button" href="">
+                <img class="menu-button-image" src="/media/icons/home.png" alt="">
+                <span class="menu-button-text">Home Page</span>
+            </a>
+            <a class="menu-button" href="">
+                <img class="menu-button-image" src="/media/icons/notification.png" alt="">
+                <span class="menu-button-text">Notifications</span>
+            </a>
+            <a class="menu-button" href="">
+                <img class="menu-button-image" src="/media/icons/message.png" alt="">
+                <span class="menu-button-text">Messsages</span>
+            </a>
+            <a class="menu-button"href="{% url 'profile' request.user.username %}">
+                <img class="menu-button-image" src="/media/icons/profile.png" alt="">
+                <span class="menu-button-text">Profile</span>
+            </a>
+        </div>
+    </div>
+</div>

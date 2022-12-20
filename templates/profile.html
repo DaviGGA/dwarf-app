@@ -18,15 +18,14 @@
             <div class="profile-images">
                 <div class="profile-banner" src="/media/wpp.jpg" alt=""></div>
                 <img class="profile-img rounded-circle" src="{{profile.profile_img.url}}" alt="">
-            </div>
-            
+            </div>           
             <div class="profile-textinfo">
                 <div style="display: flex;justify-content: space-between; align-items: center;">
                     <span class="nickname">{{profile.nickname}}</span>
                     {% if request.user.username != profile.user.username %}
                         <form method="POST" action="/follow"> {% csrf_token %}
                             <input type="hidden" name="who_is_being_followed" value="{{profile.user.username}}" id="">
-                            <button class="follow-btn">{{button_text}}</button>
+                            <button class="profile-follow-btn">{{button_text}}</button>
                         </form>
                     {% endif %}
                 </div>

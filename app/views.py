@@ -7,6 +7,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect
 from django.urls import reverse
 from datetime import datetime
+from itertools import chain
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
@@ -18,7 +19,21 @@ from .utils import token_generator_email, token_generator_password
 def index (request):
     time_now = datetime.utcnow()
     user_profile = Profile.objects.filter(user = request.user).first()
-    feed = Post.objects.all()
+    user_is_following = []
+    feed = []
+    
+    user_posts = Post.objects.filter(profile__user = request.user)
+    feed.append(user_posts)
+
+    for following in Follow.objects.filter(who_is_following = request.user.username):
+        user_is_following.append(following.who_is_being_followed)
+
+    for user in user_is_following:
+        post_of_followers = Post.objects.filter(profile__user__username = user)
+        feed.append(post_of_followers)
+   
+    user_feed = list(chain(*feed))
+
     if request.method == 'POST':
         text_content = request.POST['text_content']
         post = Post.objects.create(profile= user_profile,text_content=text_content, posted_at = datetime.utcnow())
@@ -26,7 +41,7 @@ def index (request):
         
         return redirect('index')
 
-    return render(request, 'index.html', {'user_profile' : user_profile, 'feed': feed, 'time_now' : time_now})
+    return render(request, 'index.html', {'user_profile' : user_profile, 'user_feed': user_feed, 'time_now' : time_now})
 
 def profile (request, pk):
     
@@ -48,6 +63,9 @@ def profile (request, pk):
          
     return render(request, 'profile.html', context)
 
+def post(request):
+    return render(request, 'post.html')
+
 def follow (request):
     
     if request.method == 'POST':
@@ -64,8 +82,29 @@ def follow (request):
     else:
         return redirect (f'profile/{who_is_being_followed}')
             
-def like (request):
-    pass
+def like (request):  
+    if request.method == 'POST':
+        post_being_liked = request.POST['post_being_liked']
+        post_liked = Post.objects.get(pk = post_being_liked)
+        
+        if len(Like.objects.filter(who_is_liking = request.user.username, post_being_liked = post_liked.id)) == 0:
+            like = Like.objects.create(who_is_liking = request.user.username, post_being_liked = post_liked.id)
+            like.save()
+            post_liked.likes += 1
+            post_liked.save()
+            
+            return redirect('/')
+        
+        else:
+            alrealdy_liked = Like.objects.get(who_is_liking = request.user.username, post_being_liked = post_liked.id)
+            alrealdy_liked.delete()
+            post_liked.likes -= 1
+            post_liked.save()
+            
+            return redirect('/')
+    else:
+        
+        return redirect('/')
 
 def sign_up(request):
     if request.method == 'POST':

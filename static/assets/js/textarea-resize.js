@@ -1,9 +1,10 @@
-const textarea = document.querySelector('.post-write-input')
+const textarea = document.querySelector('[data-textarea]')
 
 textarea.addEventListener("keyup",e => {
     let scHeigtht = e.target.scrollHeight;
     textarea.style.height = `${scHeigtht}px`
     console.log(scHeigtht)
+
     }) 
 
 

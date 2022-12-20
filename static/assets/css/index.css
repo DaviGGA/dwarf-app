@@ -64,15 +64,19 @@ textarea::-webkit-scrollbar {
 
 .post-content {
     display: flex;
+    width: 100%;
     flex-direction: column;
 
 }
 
 .post-header {
     display: flex;
+    justify-content: space-between;
+    width: 100%;
     align-items: center;
     gap: .3rem;
     margin-left: .3rem;
+    font-size: 12px;
 }
 
 .name {
@@ -97,7 +101,6 @@ textarea::-webkit-scrollbar {
     text-decoration: none;
 }
 
-
 .post-text {
     margin-left: .3rem;
 }
@@ -107,6 +110,44 @@ textarea::-webkit-scrollbar {
     display: flex;
     align-items: center;
     gap: 2.5rem;
+}
+
+.post-dropdown-button {
+    padding: 0;
+    border: none;
+    background: none;
+}
+
+.post-dropdown {
+    margin-right: .5rem;  
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    right: 15px;
+    top: 13px;
+    position: absolute;
+    background-color: #fff;
+    border-radius: 4px;
+    min-width: 160px;
+    box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+  
+.dropdown-content a {
+    color: black;
+    padding: .5rem .5rem;
+    text-decoration: none;
+    display: block;
+}
+
+.show {
+    display:block;
 }
 
 .post-i-buttons {
@@ -248,8 +289,12 @@ textarea::-webkit-scrollbar {
 
     .post-button {
         margin: .5rem 0;
-        width: 5rem;
+        width: 6rem;
         align-self: end;
+    }
+
+    .post-numbers {
+        font-size: 12px;
     }
 
     .post {

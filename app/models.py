@@ -29,6 +29,10 @@ class Post (models.Model):
     reposts = models.IntegerField(default=0)
     coments = models.IntegerField(default=0)
 
+    def __str__(self):
+        return f"{self.profile.user.username} | {self.text_content[:15]}..."
+
+
 
 class Follow (models.Model):
     who_is_following = models.CharField(max_length=100, blank=False, null=False)
@@ -36,4 +40,4 @@ class Follow (models.Model):
 
 class Like (models.Model):
     who_is_liking = models.CharField(max_length=100, blank=False, null = False)
-    who_is_being_liked = models.CharField(max_length=100, blank=False, null = False)
+    post_being_liked = models.CharField(max_length=100, blank=False, null = False)

@@ -1,0 +1,155 @@
+header {
+    width: 30%;
+}
+
+body {
+    display: flex;
+}
+
+main {
+    width: 40%;
+}
+
+.post-reverse{
+    margin-top: .5rem;
+    display: flex;
+    align-items: center;
+}
+
+.post-reverse__link {
+    text-decoration: none;
+    margin-right: 1rem;
+    border-radius: 50%;
+}
+
+.arrow-icon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.post-reverse__text {
+    font-weight: bold;
+}
+
+
+.post-post {
+    margin-top: 1rem;
+    height: auto;
+}
+
+.post-post__header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.post-post__profileimg {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-right: .5rem;
+    border-radius: 50%;
+}
+
+.post-post__names {
+    display: flex;
+    flex-direction: column;
+}
+
+.post-post__nickname {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+    font-size: .9rem;
+    line-height: 1rem;
+}
+
+.post-post__username {
+    color:#536471;
+    font-size: .75rem;
+    line-height: .8rem;
+
+}
+
+.post-post__dropdown {
+    width: .8rem;
+    height: .8rem;
+    
+}
+
+.post-post__content {
+    margin-top: .5rem;
+    color: #0F1419;
+}
+
+.post-post__time {
+    color: #536471;
+    font-size: .75rem;
+}
+
+.post-post__likes {
+    font-size: .75rem;
+    color: #536471;
+    margin: 1rem 0 ;
+}
+
+.post-post__interact {
+    display: flex;
+    width: 60%;
+    justify-content: space-between;
+}
+
+.post-post-i-buttons {
+    border:none;
+    width: 20px;
+    height: 20px;
+    background-color: #fff;
+    padding: 0;
+}
+
+/* COMMENT */
+
+.comment-area {
+    border-top: rgb(222, 226, 230) 1px solid ;
+    margin-top: 1rem;
+    display: flex;
+    gap: .5rem;
+    flex-direction: column;
+    padding: 0 .5rem;
+}
+
+.comment-write__profileimg {
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.comment-write {
+    margin-top: .5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.comment-write--flex {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+}
+
+
+.comment-write-input {
+    border: none;
+    padding: .3rem;
+    width: 100%;
+    resize: none;
+    outline: none
+}
+
+.comment-button {
+    margin: .5rem 0;
+    width: 6.5rem;
+    align-self: end;
+}
+
+.commentary-interact {
+    width: 30%;
+    margin: .5rem 0;
+}
