@@ -75,6 +75,15 @@ main {
     
 }
 
+.post-image {
+    margin-top: .5rem;
+    width:27.5rem;
+    height: 27.5rem;
+    border-radius: 8px;
+    border: solid .5px rgba(0,0,0,0.2);
+}
+
+
 .post-post__content {
     margin-top: .5rem;
     color: #0F1419;
@@ -153,3 +162,4 @@ main {
     width: 30%;
     margin: .5rem 0;
 }
+

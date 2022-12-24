@@ -3,6 +3,14 @@ body {
     margin: 0 auto;
 }
 
+
+
+a {
+    text-decoration: none;
+    color: #000;
+    border:  none;
+}
+
 footer {
     max-width: 40%;
 }
@@ -27,8 +35,7 @@ footer {
 }
 
 .profile-follow-btn{
-    height: 2rem;
-    padding: 0 1rem;
+    padding: 0.25rem 1rem;
     border-radius: 1rem;
     background-color: #fff;
     border: 1px solid #282828;

@@ -36,27 +36,33 @@
                     </a>
                     <a class="menu-button" href="">
                         <img class="menu-button-image" src="/media/icons/message.png" alt="">
-                        <span class="menu-button-text">Messsages</span>
+                        <span class="menu-button-text">Messages</span>
                     </a>
-                    <a class="menu-button"href="{% url 'profile' request.user.username %}">
+                    <a class="menu-button"href="{% url 'profile' request.user %}">
                         <img class="menu-button-image" src="/media/icons/profile.png" alt="">
                         <span class="menu-button-text">Profile</span>
                     </a>
                 </div>
             </div>
         </div>
-        <div class="post-container">
+        <div class="post-container">         
             <div class="post-area">
                 <a class="post-home" href="">Home Page</a>
-                <form method="POST" class="post-write"> {% csrf_token %}
+                <form method="POST" enctype="multipart/form-data" class="post-write"> {% csrf_token %}
                     <div class="post-write-flex">
                         <img class="rounded-circle" src="{{user_profile.profile_img.url}}" width="48px" height="48px" alt="">
-                        <textarea name="text_content" class="post-write-input" maxlength="280" placeholder= "Say something nice!"></textarea>
+                        <textarea data-textarea name="text_content" class="post-write-input" maxlength="280" placeholder= "Say something nice!"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-dark rounded-pill btn-sm px-4 post-button disabled">Post</button>
+                    <div style="display: flex; justify-content: space-between; padding: 0 1rem; align-items: center;">
+                    <label for="postImage">
+                        <img src="/media/icons/image.png" class="postImage-icon" width="16px" height="16px" alt="" >
+                    </label>
+                    <input type="file" name="image" id="postImage" style="display: none;" accept="image/*">
+                    <button type="submit"  data-button class="btn btn-dark rounded-pill btn-sm px-4 post-button disabled">Post</button>
+                    </div>
                 </form>
-            </div>
-            {% for post in user_feed reversed %}
+            </div>         
+            {% for post in feed reversed %}
             <div class="post"> 
                 <div class="img-space">
                     <img class="profile-img-post rounded-circle" src="{{post.profile.profile_img.url}}" alt="">
@@ -78,14 +84,20 @@
                                 <a href="">Test</a>
                             </div>
                         </div>
-                    </div>
+                    </div> 
                     <div class="post-text">
                         {{post.text_content}}
                     </div>
+                    {% if post.image %}
+                        <a href="/">
+                            <img class="post-image" src="{{post.image.url}}" alt="" srcset="">
+                        </a>
+                    {% endif %}
                     <div class="post-interact">
-                        <button class="post-i-buttons"><img src="/media/icons/comment.png" width="15px" height="16px" alt=""></button>
+                        <a href="{% url 'post' post.pk%}" class="post-i-buttons"><img src="/media/icons/comment.png" width="15px" height="16px" alt=""></a>
                         <button class="post-i-buttons"><img src="/media/icons/retweet.png" width="15px" height="16px" alt=""></button>
                         <form action="/like" method="POST"> {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.path }}">
                             <input type="hidden" name="post_being_liked" value="{{post.pk}}">
                             <button class="post-i-buttons"><img src="/media/icons/like.svg" width="18px" height="18px" alt=""></button>
                             <span class="post-numbers">{{post.likes}}</span>
@@ -97,32 +109,27 @@
             {% endfor %}
         </div>
         <div class="search-and-follow pos-fixed-right">
-            <form class="search" action="">
-                <input class="search-input" type="text" placeholder="Search on Dwarfapp">
+            <form method="POST" class="search" action="/search"> {% csrf_token %}
+                <input class="search-input" name="search" type="text" placeholder="Search on Dwarfapp">
                 <img class="search-image" src="/media/icons/mglass-grey.svg" alt="">
             </form>
             <div class="follow">
                 <h2 class="follow-title">Follow Sugestions</h2>
+                {% for profile in follow_sugestions %}
                 <div class="follow-user">
                     <img  class="follow-profile-image rounded-circle" src="/media/blank-profile-picture.png" alt="">
                     <div class="follow-space-beetween">
                         <div class="follow-name">
-                            <a class="follow-nickname" href="">Neymar Jr.</a>
-                            <span class="follow-username">@neymaroficial</span>
+                            <a class="follow-nickname" href="{% url 'profile' profile.user.username %}">{{profile.nickname}}</a>
+                            <span class="follow-username">@{{profile.user.username}}</span>
                         </div>
-                        <button class="follow-btn rounded-pill">Follow</button>
+                        <form method="POST" action="/follow"> {% csrf_token %}
+                            <input type="hidden" name = "who_is_being_followed" value="{{profile.user.username}}">
+                            <button class="follow-btn rounded-pill">Follow</button>
+                        </form>
                     </div>
                 </div>
-                <div class="follow-user">
-                    <img  class="follow-profile-image rounded-circle" src="/media/blank-profile-picture.png" alt="">
-                    <div class="follow-space-beetween">
-                        <div class="follow-name">
-                            <a class="follow-nickname" href="">Vini Jr.</a>
-                            <span class="follow-username">@vinijrrofc</span>
-                        </div>
-                        <button class="follow-btn rounded-pill">Follow</button>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
         </div>
     </main>
@@ -135,9 +142,9 @@
         </div>
     </footer>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
- integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-  crossorigin="anonymous"></script>
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+ integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
 <script src="/static/assets/js/textarea-resize.js"></script>
 <script src="/static/assets/js/button-disable.js"></script>
 <script src="/static/assets/js/post-dropdown-button.js"></script>

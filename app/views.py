@@ -2,6 +2,7 @@ from .models import *
 from django.contrib import messages
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect
@@ -18,74 +19,123 @@ from .utils import token_generator_email, token_generator_password
 
 def index (request):
     time_now = datetime.utcnow()
-    user_profile = Profile.objects.filter(user = request.user).first()
-    user_is_following = []
-    feed = []
+    user_profile = Profile.objects.get(user__username = request.user)
+    user_posts = Post.objects.filter(profile = user_profile).order_by("posted_at")
+    user_follow = Follow.objects.get(following = user_profile)
+    feed = user_posts
     
-    user_posts = Post.objects.filter(profile__user = request.user)
-    feed.append(user_posts)
+    for profile in user_follow.followed.all():
+        follower_posts = Post.objects.filter(profile = profile)
+        feed = feed | follower_posts
 
-    for following in Follow.objects.filter(who_is_following = request.user.username):
-        user_is_following.append(following.who_is_being_followed)
+    feed.order_by("posted_at")
 
-    for user in user_is_following:
-        post_of_followers = Post.objects.filter(profile__user__username = user)
-        feed.append(post_of_followers)
-   
-    user_feed = list(chain(*feed))
+
+
+    context = {
+        'user_profile' : user_profile,
+        'feed' : feed,
+        'time_now' : time_now,
+        # 'follow_sugestions' : follow_sugestions
+    }
 
     if request.method == 'POST':
+        post_image = None
+        if request.FILES.get('image') != None:
+            post_image = request.FILES.get('image')
         text_content = request.POST['text_content']
-        post = Post.objects.create(profile= user_profile,text_content=text_content, posted_at = datetime.utcnow())
+        post = Post.objects.create(profile= user_profile,text_content=text_content, posted_at = datetime.utcnow(), image = post_image)
         post.save()
         
         return redirect('index')
 
-    return render(request, 'index.html', {'user_profile' : user_profile, 'user_feed': user_feed, 'time_now' : time_now})
+    return render(request, 'index.html', context)
 
-def profile (request, pk):
+def profile (request, username):
     
-    profile = Profile.objects.get(user__username = pk)
-    number_of_followers = len(Follow.objects.filter(who_is_being_followed = profile.user.username))
-    following = len(Follow.objects.filter(who_is_following = profile.user.username))
-
-    if Follow.objects.filter(who_is_following = request.user.username, who_is_being_followed = profile.user.username):
+    profile = Profile.objects.get(user__username = username)
+    who_is_being_followed = profile.user.username
+    user_profile = Profile.objects.get(user = request.user)
+    user_follow = Follow.objects.get(following = user_profile)
+    profile_follow = Follow.objects.get(following = profile)
+  
+    if profile in user_follow.followed.all():
         button_text = 'Unfollow'
     else:
         button_text = 'Follow'
 
     context = {
-        'number_of_followers' : number_of_followers,
-        'following' : following,
         'profile' : profile,
-        'button_text' : button_text
+        'button_text' : button_text,
+        'profile_follow' : profile_follow
+        
     }
          
     return render(request, 'profile.html', context)
 
-def post(request):
-    return render(request, 'post.html')
+def post(request,pk):
+    
+    post = Post.objects.get(pk = pk)
+    comments = Comment.objects.filter(post = post)
+
+    context = {
+        'post' : post,
+        'comments' : comments
+    }
+
+    return render(request, 'post.html', context)
+
+def comment(request,pk):
+    if request.method == 'POST':
+        post_path = request.POST['post_path']
+        post = Post.objects.get(pk = pk)
+        user_profile = Profile.objects.get(user = request.user)
+        text_content = request.POST['text_content']
+
+        comment = Comment.objects.create(post = post, text_content = text_content, 
+                                            posted_at = datetime.now(), profile = user_profile)
+        comment.save()
+
+        return redirect(post_path)
 
 def follow (request):
     
     if request.method == 'POST':
         who_is_being_followed = request.POST['who_is_being_followed']
+        wbf_profile = Profile.objects.get(user__username = who_is_being_followed)
+        user_profile = Profile.objects.get(user = request.user)
+        user_follow = Follow.objects.get(following = user_profile)
+
+        # if len(Follow.objects.filter(who_is_following = request.user.username, who_is_being_followed = who_is_being_followed)) == 0:
+        #     follow = Follow.objects.create(who_is_following = request.user.username, who_is_being_followed = who_is_being_followed)
+        #     follow.save()
+        #     return redirect (f'profile/{who_is_being_followed}')
+        # else: 
+        #     follow = Follow.objects.get(who_is_following = request.user.username, who_is_being_followed =who_is_being_followed)
+        #     follow.delete()
+        #     return redirect (f'profile/{who_is_being_followed}')
         
-        if len(Follow.objects.filter(who_is_following = request.user.username, who_is_being_followed = who_is_being_followed)) == 0:
-            follow = Follow.objects.create(who_is_following = request.user.username, who_is_being_followed = who_is_being_followed)
-            follow.save()
+        if wbf_profile in user_follow.followed.all():
+            user_follow.followed.remove(wbf_profile)
             return redirect (f'profile/{who_is_being_followed}')
-        else: 
-            follow = Follow.objects.get(who_is_following = request.user.username, who_is_being_followed =who_is_being_followed)
-            follow.delete()
+
+        else:
+            user_follow.followed.add(wbf_profile)
             return redirect (f'profile/{who_is_being_followed}')
+
+
+
+           
     else:
         return redirect (f'profile/{who_is_being_followed}')
             
-def like (request):  
+def like (request):
+     
     if request.method == 'POST':
         post_being_liked = request.POST['post_being_liked']
         post_liked = Post.objects.get(pk = post_being_liked)
+        next = request.POST['next']
+        liked = None
         
         if len(Like.objects.filter(who_is_liking = request.user.username, post_being_liked = post_liked.id)) == 0:
             like = Like.objects.create(who_is_liking = request.user.username, post_being_liked = post_liked.id)
@@ -93,7 +143,7 @@ def like (request):
             post_liked.likes += 1
             post_liked.save()
             
-            return redirect('/')
+            return redirect(next)
         
         else:
             alrealdy_liked = Like.objects.get(who_is_liking = request.user.username, post_being_liked = post_liked.id)
@@ -101,10 +151,18 @@ def like (request):
             post_liked.likes -= 1
             post_liked.save()
             
-            return redirect('/')
+            return redirect(next)
     else:
         
         return redirect('/')
+
+def search(request):
+    if request.method == 'POST':
+        search = request.POST['search']
+        profiles_search = Profile.objects.filter(Q(user__username__icontains = search) | Q(nickname = search))
+
+
+        return render(request,'search.html', {'profiles_search' : profiles_search })
 
 def sign_up(request):
     if request.method == 'POST':
@@ -126,8 +184,12 @@ def sign_up(request):
                 user.is_active = False
                 user.save()
 
-                profile = Profile.objects.create(user = user, id_user = user.pk)
+                profile = Profile.objects.create(user = user)
                 profile.save()
+
+                follow_obj = Follow.objects.create(following = profile)
+                follow_obj.save()
+
 
                 uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
                 domain = get_current_site(request).domain
@@ -283,7 +345,9 @@ def profile_settings(request):
             bio = request.POST['bio']
             first_name = request.POST['first_name']
             last_name = request.POST['last_name']
+            nickname = request.POST['nickname']
 
+            user_profile.nickname = nickname
             user_profile.bio = bio
             user_profile.profile_img = profile_image
             user_profile.first_name = first_name
@@ -296,7 +360,9 @@ def profile_settings(request):
             bio = request.POST['bio']
             first_name = request.POST['first_name']
             last_name = request.POST['last_name']
-            
+            nickname = request.POST['nickname']
+
+            user_profile.nickname = nickname
             user_profile.bio = bio
             user_profile.profile_img = profile_image
             user_profile.first_name = first_name
@@ -305,7 +371,7 @@ def profile_settings(request):
 
             user_profile.save()
 
-        return redirect ('profile-settings')
+        return redirect ('index')
 
     return render (request, 'settings.html', {'user_profile' : user_profile,})
 

@@ -1,4 +1,4 @@
-const postButton = document.querySelector('.post-button')
+const postButton = document.querySelector('[data-button]')
 
 
 textarea.addEventListener('keyup', e => {

@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="/static/assets/css/index.css">
+    <link rel="stylesheet" href="/static/assets/css/settings.css">
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
      rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
@@ -20,11 +21,14 @@
 <body>
     <main>
         <section>
-            <form action="" method="POST"> {% csrf_token %}
+            <form action="" enctype="multipart/form-data" method="POST"> {% csrf_token %}
                 <div class="container mt-5 p-2" style="max-width:960px;">
                     <div class="row align-items-center mb-3">
                         <div class="col-4 text-center">
-                            <img class="rounded-circle " width="160px" height="160px" src="{{user_profile.profile_img.url}}" alt="">
+                            <label for="profileImage">
+                                <img class="rounded-circle image-settings"  width="160px" height="160px" src="{{user_profile.profile_img.url}}" alt="">
+                            </label>
+                            <input type="file" accept="image/*" name ="image" id="profileImage" style="display:none;">
                         </div>
                         <div class="col-4 ">
                             <input type="text" id="firstName" value="{{user_profile.first_name}}" class="form-control form-size" placeholder="First Name" name="first_name">
@@ -32,6 +36,21 @@
                         <div class="col-4">
                             <input type="text" id="lastName" value="{{user_profile.last_name}}" class="form-control form-size" placeholder="Last Name" name="last_name">
                         </div>
+                    </div>
+                    <div class="row mb-3 align-items-center">
+                        <div class="col-4"></div>
+                        <div class="col-4 mb-3">
+                            
+                            <label class="visually-hidden" for="autoSizingInput"></label>
+                            <input type="text" class="form-control" value="{{user_profile.nickname}}" id="autoSizingInput" name="nickname" placeholder="Nickname">
+                        </div>
+                        <fieldset disabled class="col-4 mb-3">
+                            <label class="visually-hidden" for="autoSizingInputGroup"></label>
+                            <div class="input-group">
+                                <div class="input-group-text">@</div>
+                                <input type="text" value="{{user_profile.user.username}}" class="form-control" id="autoSizingInputGroup" placeholder="Username">
+                            </div>
+                        </fieldset>
                     </div>
                     <div class="row align-items-center">
                         <div class="col-4 ">
@@ -41,7 +60,8 @@
                             <input type="email" id="Email" value="{{user_profile.user.email}}" class="form-control form-size" name="email">
                         </fieldset>
                     </div>
-                    <div class="row">
+                    
+                    <div class="row align-items-center">
                         <div class="col-4">
                             <div class="fs-6 px-2 border">Shares 1</div>
                             <div class="fs-6 px-2 border">Likes 1</div>

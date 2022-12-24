@@ -27,14 +27,18 @@
                             <input type="hidden" name="who_is_being_followed" value="{{profile.user.username}}" id="">
                             <button class="profile-follow-btn">{{button_text}}</button>
                         </form>
+                    {% else %}
+                        <form method="POST" action="/follow"> {% csrf_token %}
+                            <a href="{% url 'profile-settings' %}" class="profile-follow-btn">Settings</a>
+                        </form>
                     {% endif %}
                 </div>
                 <span class="username">@{{profile.user.username}}</span>
                 <span class="bio">{{profile.bio}}</span>
             </div>
             <div class="profile-follow">
-                <span><strong>{{following}}</strong> follows</span>
-                <span><strong>{{number_of_followers}}</strong> followers</span>
+                <span><strong>{{profile_follow.following_count}}</strong> follows</span>
+                <span><strong>{{profile_follow.followers_count}}</strong> followers</span>
             </div>
         </section>
     </header>

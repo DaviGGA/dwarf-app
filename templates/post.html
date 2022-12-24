@@ -18,7 +18,7 @@
     <main>
         <section class="post">
             <div class="post-reverse">
-                <a class="post-reverse__link" href="">
+                <a class="post-reverse__link" href="/">
                     <img class="arrow-icon" src="/media/icons/arrow-left.svg" alt="" srcset="">
                 </a>
                 <span class="post-reverse__text" href="">Return</span>
@@ -28,20 +28,27 @@
                     <div style="display: flex;">
                         <img class="post-post__profileimg"  src="/media/blank-profile-picture.png" alt="">
                         <div class="post-post__names">
-                            <a class="post-post__nickname" href="">José</a>
-                            <span class="post-post__username">@joseteste</span>
+                            <a class="post-post__nickname" href="">{{post.profile.nickname}}</a>
+                            <span class="post-post__username">@{{post.profile.user.username}}</span>
                         </div>
                     </div>
                     <img class="post-post__dropdown" src="/media/icons/dot.svg" alt="">
                 </div>
-                <div class="post-post__content">Boa tarde mundo! Hoje eu estou com vontade de caminhar no parque, 
-                    alguém quer ir comigo aproveitar esse sol?</div>  
-                <time class="post-post__time">12:00 PM - 20 dec 2022</time>
-                <div class="post-post__likes"> <strong style="color: black;">8</strong> likes</div>
+                <div style="display: flex; flex-direction: column;">
+                    <div class="post-post__content">{{post.text_content}}</div>
+                    {% if post.image %}
+                        <a href="/">
+                            <img class="post-image" src="{{post.image.url}}" alt="" srcset="">
+                        </a>
+                    {% endif %}
+                    <time class="post-post__time">{{post.posted_at}}</time>
+                </div>
+                <div class="post-post__likes"> <strong style="color: black;">{{post.likes}}</strong> likes</div>
                 <div class="post-post__interact">
                     <button class="post-post-i-buttons"><img src="/media/icons/comment.png" width="15px" height="16px" alt=""></button>
                     <button class="post-post-i-buttons"><img src="/media/icons/retweet.png" width="15px" height="16px" alt=""></button>
                     <form action="/like" method="POST"> {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.path }}">
                         <input type="hidden" name="post_being_liked" value="{{post.pk}}">
                         <button class="post-post-i-buttons"><img src="/media/icons/like.svg" width="18px" height="18px" alt=""></button>
                     </form>
@@ -51,34 +58,37 @@
         </section>
         <section class="comment">
             <div class="comment-area">
-                <form method="POST" class="comment-write"> {% csrf_token %}
+                <form method="POST" action="{% url 'comment' post.pk %}" class="comment-write"> {% csrf_token %}
                     <div class="comment-write--flex">
+                        <input type="hidden" name="post_path" value="{{ request.path }}">
                         <img class=" comment-write__profileimg rounded-circle" src="/media/blank-profile-picture.png"  alt="">
                         <textarea name="text_content" class="comment-write-input" data-textarea maxlength="280" placeholder= "Say something nice!"></textarea>
                     </div>
-                    <button type="submit" class="btn btn-dark rounded-pill btn-sm px-4 comment-button disabled">Comment</button>
+                    <button type="submit" data-button class="btn btn-dark rounded-pill btn-sm px-4 comment-button disabled">Reply</button>
                 </form>
                 <div class="commentaries">
-                    <div class="post-post__header">
-                        <div style="display: flex;">
-                            <img class="post-post__profileimg"  src="/media/blank-profile-picture.png" alt="">
-                            <div class="post-post__names">
-                                <a class="post-post__nickname" href="">Maria</a>
-                                <span class="post-post__username">@mariateste</span>
+                    {% for comment in comments reversed %}
+                        <div class="post-post__header">
+                            <div style="display: flex;">
+                                <img class="post-post__profileimg"  src="/media/blank-profile-picture.png" alt="">
+                                <div class="post-post__names">
+                                    <a class="post-post__nickname" href="">{{comment.profile.nickname}}</a>
+                                    <span class="post-post__username">@{{comment.profile.user.username}}</span>
+                                </div>
                             </div>
+                            <img class="post-post__dropdown" src="/media/icons/dot.svg" alt="">
                         </div>
-                        <img class="post-post__dropdown" src="/media/icons/dot.svg" alt="">
-                    </div>
-                    <div class="post-post__content">Vamos!!!!</div>  
-                    <time class="post-post__time">12:00 PM - 20 dec 2022</time>
-                    <div class="commentary-interact post-post__interact">
-                        <button class="post-post-i-buttons"><img src="/media/icons/retweet.png" width="15px" height="16px" alt=""></button>
-                        <form action="/like" method="POST"> {% csrf_token %}
-                            <input type="hidden" name="post_being_liked" value="{{post.pk}}">
-                            <button class="post-post-i-buttons"><img src="/media/icons/like.svg" width="18px" height="18px" alt=""></button>
-                        </form>
-                        <button class="post-post-i-buttons"><img src="/media/icons/share.png" width="16px" height="16px" alt=""></button>
-                    </div> 
+                        <div class="post-post__content">{{comment.text_content}}</div>  
+                        <time class="post-post__time">{{comment.posted_at}}</time>
+                        <div class="commentary-interact post-post__interact">
+                            <button class="post-post-i-buttons"><img src="/media/icons/retweet.png" width="15px" height="16px" alt=""></button>
+                            <form action="/like" method="POST"> {% csrf_token %}
+                                <input type="hidden" name="post_being_liked" value="{{post.pk}}">
+                                <button class="post-post-i-buttons"><img src="/media/icons/like.svg" width="18px" height="18px" alt=""></button>
+                            </form>
+                            <button class="post-post-i-buttons"><img src="/media/icons/share.png" width="16px" height="16px" alt=""></button>
+                        </div>
+                    {% endfor %}
 
                 </div>
             </div>
@@ -86,4 +96,5 @@
     </main>
 </body>
 <script src="/static/assets/js/textarea-resize.js"></script>
+<script src="/static/assets/js/button-disable.js"></script>
 </html>
