@@ -87,6 +87,7 @@ textarea::-webkit-scrollbar {
     font-size: 12px;
 }
 
+
 .name {
     font-weight: bold;
     text-decoration: none;
@@ -323,6 +324,24 @@ textarea::-webkit-scrollbar {
     .postImage-icon:hover {
         padding: .5px;
         
+    }
+
+    #delete-post {
+        display: none;
+    }
+    
+    .delete-post-label {
+        color: red;
+        font-weight: bold;
+        padding: .5rem;
+        cursor: pointer;
+        width: 100%;
+        border-bottom: rgb(222, 226, 230) 1px solid;
+    }
+
+    .delete-post-label:hover{
+        background-color: #ecececc2;
+        transition: .3s;
     }
 
     .search {

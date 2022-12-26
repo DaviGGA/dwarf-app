@@ -1,3 +1,4 @@
+{% load humanize %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +11,7 @@
     <link rel="stylesheet" href="/static/assets/css/index.css">
     <link rel="stylesheet" href="/static/assets/css/profile.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{profile.user.username}}'s profile</title>
 </head>
 <body>
     <header>
@@ -49,6 +50,51 @@
             <a href="">Media</a>
             <a href="">Likes</a>
         </div>
+        {% for post in profile_posts reversed %}
+            <div class="post" style="border: none;"> 
+                <div class="img-space">
+                    <img class="profile-img-post rounded-circle" src="{{post.profile.profile_img.url}}" alt="">
+                </div>
+                <div class="post-content ms-1">
+                    <div class="post-header">
+                        <div>
+                            <a href="{% url 'profile' post.profile.user.username %}" class="name">{{post.profile.nickname}}</a>
+                            <a href="" class="username">@{{post.profile.user.username}}</a>
+                            <span class="post-time">{{post.posted_at|naturaltime}}</span>
+                        </div>
+                        <div class="dropdown">
+                            <button type="button" class="post-dropdown-button drop-btn">
+                                <img src="/media/icons/dot.svg" class="post-dropdown" width="16px" height="16px" alt="">
+                            </button>
+                            <div id="myDropdown" class="dropdown-content">
+                                <a href="">Test</a>
+                                <a href="">Test</a>
+                                <a href="">Test</a>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="post-text">
+                        {{post.text_content}}
+                    </div>
+                    {% if post.image %}
+                        <a href="/">
+                            <img class="post-image" src="{{post.image.url}}" alt="" srcset="">
+                        </a>
+                    {% endif %}
+                    <div class="post-interact">
+                        <a href="{% url 'post' post.pk%}" class="post-i-buttons"><img src="/media/icons/comment.png" width="15px" height="16px" alt=""></a>
+                        <button class="post-i-buttons"><img src="/media/icons/retweet.png" width="15px" height="16px" alt=""></button>
+                        <form action="/like" method="POST"> {% csrf_token %}
+                            <input type="hidden" name="next" value="{{ request.path }}">
+                            <input type="hidden" name="post_being_liked" value="{{post.pk}}">
+                            <button class="post-i-buttons"><img src="/media/icons/like.svg" width="18px" height="18px" alt=""></button>
+                            <span class="post-numbers">{{post.likes}}</span>
+                        </form>
+                        <button class="post-i-buttons"><img src="/media/icons/share.png" width="16px" height="16px" alt=""></button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
     </main>
     <footer class="container-fluid footer-mobile px-3 border-top ">
         <div class="header-icons my-2">

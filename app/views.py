@@ -54,10 +54,10 @@ def index (request):
 def profile (request, username):
     
     profile = Profile.objects.get(user__username = username)
-    who_is_being_followed = profile.user.username
     user_profile = Profile.objects.get(user = request.user)
     user_follow = Follow.objects.get(following = user_profile)
     profile_follow = Follow.objects.get(following = profile)
+    profile_posts = Post.objects.filter(profile = profile)
   
     if profile in user_follow.followed.all():
         button_text = 'Unfollow'
@@ -67,7 +67,8 @@ def profile (request, username):
     context = {
         'profile' : profile,
         'button_text' : button_text,
-        'profile_follow' : profile_follow
+        'profile_follow' : profile_follow,
+        'profile_posts' : profile_posts
         
     }
          
@@ -128,7 +129,16 @@ def follow (request):
            
     else:
         return redirect (f'profile/{who_is_being_followed}')
-            
+
+def delete_post(request,pk):
+    if request.method == 'POST':
+        post = Post.objects.get(pk=pk)
+        if post.image:
+            post.image.delete()
+        post.delete()
+        
+        return redirect ('/')
+
 def like (request):
      
     if request.method == 'POST':
@@ -341,6 +351,7 @@ def profile_settings(request):
 
     if request.method == 'POST':
         if request.FILES.get('image') != None:
+            user_profile.profile_img.delete()
             profile_image = request.FILES.get('image')
             bio = request.POST['bio']
             first_name = request.POST['first_name']
