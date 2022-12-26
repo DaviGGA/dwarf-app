@@ -76,12 +76,14 @@ def profile (request, username):
 
 def post(request,pk):
     
+    user_profile = Profile.objects.get(user = request.user)
     post = Post.objects.get(pk = pk)
     comments = Comment.objects.filter(post = post)
 
     context = {
         'post' : post,
-        'comments' : comments
+        'comments' : comments,
+        'user_profile' : user_profile,
     }
 
     return render(request, 'post.html', context)
@@ -382,11 +384,9 @@ def profile_settings(request):
 
             user_profile.save()
 
-        return redirect ('index')
+        return redirect (f'profile/{user}')
 
     return render (request, 'settings.html', {'user_profile' : user_profile,})
 
-def editing_change_password(request):
-    messages.error(request,"TESTE")    
-    return render (request,'change-password.html')
+
 
