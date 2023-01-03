@@ -5,6 +5,8 @@
 
 ### Run Locally
  
+ - Create a virtual environment(venv)
+ 
  - Install all required packages:
 ```
 pip install -r requirements.txt
