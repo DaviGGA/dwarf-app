@@ -14,7 +14,7 @@ urlpatterns = [
     path('profile-settings', views.profile_settings, name = 'profile-settings'),
     path('search', views.search, name = 'search'),
     path('', views.index, name = 'index'),
-    path('email-verification/<uidb64>/<token>', views.email_verification, name = 'email-verification'),
-    path('forgot-password', views.forgot_password, name = 'forgot-password'),
-    path('change-password/<uidb64>/<token>', views.change_password, name = 'change-password'),
+    # path('email-verification/<uidb64>/<token>', views.email_verification, name = 'email-verification'),
+    # path('forgot-password', views.forgot_password, name = 'forgot-password'),
+    # path('change-password/<uidb64>/<token>', views.change_password, name = 'change-password'),
 ]

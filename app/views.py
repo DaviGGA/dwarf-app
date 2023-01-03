@@ -8,7 +8,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect
 from django.urls import reverse
 from datetime import datetime
-from itertools import chain
+from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
@@ -17,6 +17,7 @@ from .utils import token_generator_email, token_generator_password
 
 # Create your views here.
 
+@login_required(login_url = 'signin')
 def index (request):
     time_now = datetime.utcnow()
     user_profile = Profile.objects.get(user__username = request.user)
@@ -51,6 +52,7 @@ def index (request):
 
     return render(request, 'index.html', context)
 
+@login_required(login_url = 'signin')
 def profile (request, username):
     
     profile = Profile.objects.get(user__username = username)
@@ -74,6 +76,7 @@ def profile (request, username):
          
     return render(request, 'profile.html', context)
 
+@login_required(login_url = 'signin')
 def post(request,pk):
     
     user_profile = Profile.objects.get(user = request.user)
@@ -88,6 +91,7 @@ def post(request,pk):
 
     return render(request, 'post.html', context)
 
+@login_required(login_url = 'signin')
 def comment(request,pk):
     if request.method == 'POST':
         post_path = request.POST['post_path']
@@ -101,6 +105,7 @@ def comment(request,pk):
 
         return redirect(post_path)
 
+@login_required(login_url = 'signin')
 def follow (request):
     
     if request.method == 'POST':
@@ -132,6 +137,7 @@ def follow (request):
     else:
         return redirect (f'profile/{who_is_being_followed}')
 
+@login_required(login_url = 'signin')
 def delete_post(request,pk):
     if request.method == 'POST':
         post = Post.objects.get(pk=pk)
@@ -141,6 +147,7 @@ def delete_post(request,pk):
         
         return redirect ('/')
 
+@login_required(login_url = 'signin')
 def like (request):
      
     if request.method == 'POST':
@@ -168,6 +175,7 @@ def like (request):
         
         return redirect('/')
 
+@login_required(login_url = 'signin')
 def search(request):
     if request.method == 'POST':
         search = request.POST['search']
@@ -193,7 +201,7 @@ def sign_up(request):
             
             else:
                 user = User.objects.create_user(username = username, email = email, password = password)
-                user.is_active = False
+                # user.is_active = False
                 user.save()
 
                 profile = Profile.objects.create(user = user)
@@ -203,24 +211,24 @@ def sign_up(request):
                 follow_obj.save()
 
 
-                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-                domain = get_current_site(request).domain
-                link = reverse('email-verification',kwargs={'uidb64' : uidb64, 'token': token_generator_email.make_token(user)})
-                activate_url ='http://'+domain+link
+                # uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+                # domain = get_current_site(request).domain
+                # link = reverse('email-verification',kwargs={'uidb64' : uidb64, 'token': token_generator_email.make_token(user)})
+                # activate_url ='http://'+domain+link
 
-                email_subject = 'Activate your account'
-                email_body = f'Hi {user.username}! Use this link to verify your account:\n {activate_url}'
+                # email_subject = 'Activate your account'
+                # email_body = f'Hi {user.username}! Use this link to verify your account:\n {activate_url}'
                 
-                email_confirm = EmailMessage (
-                    email_subject,
-                    email_body,
-                    'davidjango0604@gmail.com',
-                    [email],
-                )
+                # email_confirm = EmailMessage (
+                #     email_subject,
+                #     email_body,
+                #     'davidjango0604@gmail.com',
+                #     [email],
+                # )
 
-                email_confirm.send(fail_silently=False)
+                # email_confirm.send(fail_silently=False)
 
-                messages.success(request, "Account created sucessfully, check your e-mail for account verification")
+                # messages.success(request, "Account created sucessfully, check your e-mail for account verification")
                 return redirect('signin')
 
 
@@ -230,62 +238,61 @@ def sign_up(request):
 
     return render(request, 'signup.html')
 
-def email_verification(request, uidb64,token):
+# def email_verification(request, uidb64,token):
 
-
-    try:
-        id = force_str(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(pk = id)
+#     try:
+#         id = force_str(urlsafe_base64_decode(uidb64))
+#         user = User.objects.get(pk = id)
         
-        if not token_generator_email.check_token(user, token):
-                return HttpResponse('You alrealdy changed your email')
+#         if not token_generator_email.check_token(user, token):
+#                 return HttpResponse('You alrealdy changed your email')
         
-        if user.is_active:
-            return redirect('signin')
+#         if user.is_active:
+#             return redirect('signin')
         
-        user.is_active = True
-        user.save()
+#         user.is_active = True
+#         user.save()
 
-        messages.success(request,"Your acccount was activated sucessfully!")
-        return redirect('signin')
+#         messages.success(request,"Your acccount was activated sucessfully!")
+#         return redirect('signin')
 
-    except Exception as ex:
-        pass
+#     except Exception as ex:
+#         pass
 
 
-    return redirect('signin')
+#     return redirect('signin')
 
-def forgot_password(request):
+# def forgot_password(request):
 
-    if request.method == 'POST':
-        email = request.POST['email']
-        user = User.objects.get(email = email)
+#     if request.method == 'POST':
+#         email = request.POST['email']
+#         user = User.objects.get(email = email)
 
-        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-        domain = get_current_site(request).domain
-        link = reverse('change-password',kwargs={'uidb64' : uidb64, 'token': token_generator_password.make_token(user)})
-        activate_url ='http://'+domain+link
+#         uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+#         domain = get_current_site(request).domain
+#         link = reverse('change-password',kwargs={'uidb64' : uidb64, 'token': token_generator_password.make_token(user)})
+#         activate_url ='http://'+domain+link
 
-        email_subject = 'Reset your password'
-        email_body = f'Hi {user.username}! Use this link to change your password:\n {activate_url}'
+#         email_subject = 'Reset your password'
+#         email_body = f'Hi {user.username}! Use this link to change your password:\n {activate_url}'
         
-        email_confirm = EmailMessage (
-            email_subject,
-            email_body,
-            'davidjango0604@gmail.com',
-            [email],
-                )
+#         email_confirm = EmailMessage (
+#             email_subject,
+#             email_body,
+#             'davidjango0604@gmail.com',
+#             [email],
+#                 )
 
-        email_confirm.send(fail_silently=False)
-        messages.success(request, "Email succesfully sent.Please, check your mailbox.")
+#         email_confirm.send(fail_silently=False)
+#         messages.success(request, "Email succesfully sent.Please, check your mailbox.")
         
-        return redirect('signin')
+#         return redirect('signin')
 
 
 
-    return render(request, 'forgot-password.html')
+#     return render(request, 'forgot-password.html')
 
-def change_password(request, uidb64,token):
+# def change_password(request, uidb64,token):
     
     try:
         id = force_str(urlsafe_base64_decode(uidb64))
@@ -319,7 +326,7 @@ def change_password(request, uidb64,token):
         pass
 
     return render(request, 'change-password.html', {'user' : user})
-    
+
 def sign_in(request):
     if request.method == 'POST':
         login_user = request.POST['login']
@@ -340,12 +347,14 @@ def sign_in(request):
             return redirect ('index')
 
     return render(request, 'signin.html')
-       
+
+@login_required(login_url = 'signin')       
 def logout_user(request):
     
     logout(request)
     return redirect ('signin')
 
+@login_required(login_url = 'signin')
 def profile_settings(request):
     user_profile = Profile.objects.get(user = request.user)
     user = User.objects.get(username = user_profile.user)
