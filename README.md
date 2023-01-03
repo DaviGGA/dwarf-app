@@ -7,8 +7,8 @@
  
  - Create a virtual environment(venv) [OPTIONAL]
  
- https://www.youtube.com/watch?v=hA2l0TgaZhM&t=146s (Tutorial PT/BR)
- https://www.youtube.com/watch?v=Wuuiga0wKdQ (Tutorial ENG)
+ - https://www.youtube.com/watch?v=hA2l0TgaZhM&t=146s (Tutorial PT/BR)
+ - https://www.youtube.com/watch?v=Wuuiga0wKdQ (Tutorial ENG)
  
  - Install all required packages:
 ```
